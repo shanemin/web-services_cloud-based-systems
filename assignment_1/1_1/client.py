@@ -4,33 +4,21 @@ wsdl = 'http://localhost:8000/?wsdl'
 client = zeep.Client(wsdl=wsdl)
 operators = ['+', '-', '*', '/']
 
-def add(val1, val2):
-    return client.service.add(val1, val2)
-
-def sub(val1, val2):
-    return client.service.sub(val1, val2)
-
-def mul(val1, val2):
-    return client.service.mul(val1, val2)
-
-def div(val1, val2):
-    return client.service.div(val1, val2)
-
 def calculate(val1, op, val2):
     answer = 0
 
     if op in operators:
         if op == '+':
-            answer = add(val1, val2)
+            answer = client.service.add(val1, val2)
         elif op == '-':
-            answer = sub(val1, val2)
+            answer = client.service.sub(val1, val2)
         elif op == '*':
-            answer = mul(val1, val2)
+            answer = client.service.mul(val1, val2)
         elif op == '/':
             if val2 == 0:
                 print('Error: division by zero')
                 return
-            answer = div(val1, val2)
+            answer = client.service.div(val1, val2)
     else:
         print('Error: equation accepts only the following operators +-*/')
         return
@@ -41,9 +29,9 @@ if __name__ == "__main__":
     while True:
         try:
             equation = raw_input("\nEnter a simple equation\n").split()
-            
+
             if len(equation) != 3:
-                print('Error: too many arguments')
+                print('Error: too few/many arguments')
                 continue
 
             value1 = float(equation[0])
