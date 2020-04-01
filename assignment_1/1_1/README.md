@@ -19,3 +19,4 @@
     - &nbsp;&nbsp;&nbsp; 2 &nbsp;&nbsp;&nbsp; + &nbsp;&nbsp;&nbsp; 2
     - 4 * -1337
     - -3.14 - -9
+- To exit the program from terminal, press ctrl+z
