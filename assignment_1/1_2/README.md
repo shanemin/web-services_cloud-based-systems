@@ -6,9 +6,9 @@ The following has been tested using RHEL 8.1 and Python 3.6
 - https://flask.palletsprojects.com/en/1.1.x/installation/
 
 ## To run the URL shortener, first start _web_server.py_:
-- type `export FLASK_APP=web_server.py` into your terminal, or add it to your ~/.bashrc file
-- in the _assignment1/1_2_ directory, type `. venv/bin/activate` in your terminal to start the virtual environment
-- in the same directory, type `flask run` in your terminal to start the REST service
+- Type `export FLASK_APP=web_server.py` into your terminal, or add it to your ~/.bashrc file
+- In the _assignment1/1_2_ directory, type `. venv/bin/activate` in your terminal to start the virtual environment
+- In the same directory, type `flask run` in your terminal to start the REST service
 
     (The web service uses localhost port 5000)
 
