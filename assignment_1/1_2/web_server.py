@@ -11,6 +11,7 @@ app = Flask(__name__)
 host = 'http://localhost:5000/'
 str_encode = str.encode
 db_file = 'urls.db'
+padding = 9999999999
 
 def table_check():
     create_table = """
@@ -45,6 +46,8 @@ def toBase10(string, alphabet=(string.digits + string.ascii_letters)):
     num = 0
     idx = 0
     for char in string:
+        if char not in alphabet:
+            return None
         power = (strlen - (idx + 1))
         num += alphabet.index(char) * (base ** power)
         idx += 1
@@ -52,19 +55,22 @@ def toBase10(string, alphabet=(string.digits + string.ascii_letters)):
 
 @app.route('/<string:value>', methods=['GET'])
 def single_action_get(value):
-    # TODO return 301 with value, or 404
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
             'SELECT URL FROM WEB_URL WHERE ID=(?)',
             (toBase10(value),)).fetchall()
+        if len(res) == 0:
+            return '404 Not Found', 404
     shortened_url = host + value
     full_url = str(base64.urlsafe_b64decode(res[0][0])).strip("'b").strip("'")
-    return 'The actual URL from: ' + shortened_url + ' is: ' + full_url
+    return 'The full URL from: ' + shortened_url + ' is: ' + full_url, 301
 
 @app.route('/<string:value>', methods=['POST'])
 def single_action_post(value):
+    # TODO add 400 with "error" (if not a properly formatted address)
     original_url = str.encode(value)
+    print(urlparse(value))
     if urlparse(original_url).scheme == '':
         url = 'http://' + original_url
     else:
@@ -76,7 +82,7 @@ def single_action_post(value):
             [base64.urlsafe_b64encode(url)]
         )
         encoded_string = toBase62(res.lastrowid)
-    return 'The shortened URL from: ' + value + ' is: ' + host + encoded_string
+    return 'The shortened URL from: ' + value + ' is: ' + host + encoded_string, 201
 
 @app.route('/<string:value>', methods=['PUT'])
 def single_action_put(value):
@@ -86,17 +92,20 @@ def single_action_put(value):
 
 @app.route('/<string:value>', methods=['DELETE'])
 def single_action_delete(value):
-    # TODO return 202 or 404
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
+            'SELECT ID FROM WEB_URL WHERE ID=(?)',
+            (toBase10(value),)).fetchall()
+        if len(res) == 0: 
+            return '404 Not Found', 404
+        res = cursor.execute(
             'DELETE FROM WEB_URL WHERE ID=(?)',
             (toBase10(value),))
-    return 'Entry with key: ' + value + ' has been deleted'
+    return 'Entry with key: ' + value + ' has been deleted', 202
 
 @app.route('/', methods=['GET'])
 def bulk_action_get():
-    # TODO return 200 with keys
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
@@ -104,13 +113,12 @@ def bulk_action_get():
     key_list = []
     for key in res:
         key_list.append(toBase62(key[0]))
-    return 'Available keys:\n\n' + str(key_list)
+    return 'Available keys:\n\n' + str(key_list), 200
 
 @app.route('/', methods=['DELETE'])
 def bulk_action_delete():
-    # TODO return 204
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
             'DELETE FROM WEB_URL',)
-    return 'The database has been cleared'
+    return 'The database has been cleared', 204
