@@ -6,12 +6,12 @@ import string
 import sqlite3
 import base64
 import sys
+import re
 
 app = Flask(__name__)
 host = 'http://localhost:5000/'
 str_encode = str.encode
 db_file = 'urls.db'
-padding = 9999999999
 
 def table_check():
     create_table = """
@@ -68,27 +68,31 @@ def single_action_get(value):
 
 @app.route('/<string:value>', methods=['POST'])
 def single_action_post(value):
-    # TODO add 400 with "error" (if not a properly formatted address)
-    original_url = str.encode(value)
-    print(urlparse(value))
-    if urlparse(original_url).scheme == '':
-        url = 'http://' + original_url
-    else:
-        url = original_url
+    # TODO add the regex
+    url = re.match('some_regex_here', value)
+
+    if url is None:
+        return 'Invalid URL. Must be in the format: some_format', 400
+    else: url = str.encode(value)
+
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
             'INSERT INTO WEB_URL (URL) VALUES (?)',
-            [base64.urlsafe_b64encode(url)]
-        )
+            [base64.urlsafe_b64encode(url)])
         encoded_string = toBase62(res.lastrowid)
     return 'The shortened URL from: ' + value + ' is: ' + host + encoded_string, 201
 
 @app.route('/<string:value>', methods=['PUT'])
 def single_action_put(value):
-    # TODO implement this method
-    # return 200, 400 with "error", or 404
-    return 'put: ' + value
+    # TODO return 400 with "error", or 404
+    url = str.encode('www.put.com')
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        res = cursor.execute(
+            'UPDATE WEB_URL SET URL = ? WHERE ID = ?''', 
+            (base64.urlsafe_b64encode(url), toBase10(value)))
+    return 'The full URL for ' + host + value + ' is now: www.put.com', 200
 
 @app.route('/<string:value>', methods=['DELETE'])
 def single_action_delete(value):
