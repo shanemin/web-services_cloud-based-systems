@@ -86,13 +86,14 @@ def single_action_post(value):
 @app.route('/<string:value>', methods=['PUT'])
 def single_action_put(value):
     # TODO return 400 with "error", or 404
-    url = str.encode('www.put.com')
+    new_url = 'www.put.com'
+    url = str.encode(new_url)
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
             'UPDATE WEB_URL SET URL = ? WHERE ID = ?''', 
             (base64.urlsafe_b64encode(url), toBase10(value)))
-    return 'The full URL for ' + host + value + ' is now: www.put.com', 200
+    return 'The full URL for ' + host + value + ' is now: ' + new_url, 200
 
 @app.route('/<string:value>', methods=['DELETE'])
 def single_action_delete(value):
