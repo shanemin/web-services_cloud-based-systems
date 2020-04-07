@@ -91,8 +91,15 @@ def single_action_put(value):
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
+            'SELECT URL FROM WEB_URL WHERE ID=(?)',
+            (toBase10(value),)).fetchall()
+        if len(res) == 0:
+            return '404 Not Found', 404
+    with sqlite3.connect(db_file) as conn:
+        cursor = conn.cursor()
+        res = cursor.execute(
             'UPDATE WEB_URL SET URL = ? WHERE ID = ?''', 
-            (base64.urlsafe_b64encode(url), toBase10(value)))
+            (base64.urlsafe_b64encode(url), toBase10(value))).fetchall()
     return 'The full URL for ' + host + value + ' is now: ' + new_url, 200
 
 @app.route('/<string:value>', methods=['DELETE'])
