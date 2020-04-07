@@ -1,0 +1,8 @@
+Description:
+Our design is when users insert an url, it will shorten the url and show a shortened one to users. By using different command, users can also implement what they want, for example: deleting an url. We use the Base62 to generate a short string from a given large number. Whenever a request comes to our website, we can go back the number by decoding the short string from url. Then use that number ID to fetch record from database and redirect to that url. In our implementation, we use Base62 to encode and decode. We also use Flask for handling requests and redirects. Meanwhile, we use SQLite3 for serving the purpose of database. In each method, we will connect to the database and then do what the command wants.
+
+
+
+Question: How would you implementing URL-shortener for multiple users?
+Answer: We can append an increasing sequence number to each input URL to make it unique, and then generate a hash of it. We don’t need to store this sequence number in the databases, though. Possible problems with this approach could be an ever-increasing sequence number. But appending an increasing sequence number will also impact the performance of the service.
+Another solution could be to append user id (which should be unique) to the input URL. However, if the user has not signed in, we would have to ask the user to choose a uniqueness key. Even after this, if we have a conflict, we have to keep generating a key until we get a unique one.
