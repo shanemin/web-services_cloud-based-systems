@@ -85,7 +85,6 @@ def single_action_post(value):
 
 @app.route('/<string:value>', methods=['PUT'])
 def single_action_put(value):
-    # TODO return 400 with "error", or 404
     new_url = 'www.put.com'
     url = str.encode(new_url)
     with sqlite3.connect(db_file) as conn:
@@ -101,6 +100,10 @@ def single_action_put(value):
             'UPDATE WEB_URL SET URL = ? WHERE ID = ?''', 
             (base64.urlsafe_b64encode(url), toBase10(value))).fetchall()
     return 'The full URL for ' + host + value + ' is now: ' + new_url, 200
+
+@app.route('/', methods=['PUT'])
+def single_action_put2():
+    return '400 Server Error', 400
 
 @app.route('/<string:value>', methods=['DELETE'])
 def single_action_delete(value):
