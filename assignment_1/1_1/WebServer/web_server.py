@@ -1,6 +1,6 @@
 import soaplib
 from soaplib.core.service import rpc, DefinitionBase, soap
-from soaplib.core.model.primitive import String, Integer, Double
+from soaplib.core.model.primitive import Double
 from soaplib.core.server import wsgi
 
 class CalculatorService(DefinitionBase):
@@ -26,6 +26,7 @@ if __name__=='__main__':
         soap_application = soaplib.core.Application([CalculatorService], 'tns')
         wsgi_application = wsgi.Application(soap_application)
         server = make_server('localhost', 8000, wsgi_application)
+        print('Started the web service on localhost:8000')
         server.serve_forever()
     except ImportError:
         print('Error: example server code requires Python >= 2.5')
