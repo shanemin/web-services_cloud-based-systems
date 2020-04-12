@@ -1,4 +1,5 @@
 # Assignment 1.2: RESTful Service
+### The assignment report/answers are in the file: _report_answers.doc_
 
 The following has been tested using RHEL 8.1 and Python 3.6
 
@@ -15,4 +16,6 @@ The following has been tested using RHEL 8.1 and Python 3.6
 ## Usage:
 - This is a RESTful URL-shortener service
 - REST methods can be tested using a program such as the Postman API Client (https://www.postman.com/)
+- Set the address to: http://localhost:5000/
+- Perform the various REST operations as described in the assignment description
 - To exit the program from terminal, press ctrl+c

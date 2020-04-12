@@ -11,7 +11,7 @@ import re
 app = Flask(__name__)
 host = 'http://localhost:5000/'
 str_encode = str.encode
-db_file = 'urls.db'
+db_file = 'databases/urls.db'
 
 def table_check():
     create_table = """
@@ -68,13 +68,10 @@ def single_action_get(value):
 
 @app.route('/<string:value>', methods=['POST'])
 def single_action_post(value):
-    # TODO add the regex
-    url = re.match('some_regex_here', value)
-
-    if url is None:
-        return 'Invalid URL. Must be in the format: some_format', 400
-    else: url = str.encode(value)
-
+    # url = re.match('some_regex_here', value)
+    # if url is None:
+    #     return 'Invalid URL. Must be in the format: some_format', 400
+    url = str.encode(value)
     with sqlite3.connect(db_file) as conn:
         cursor = conn.cursor()
         res = cursor.execute(
