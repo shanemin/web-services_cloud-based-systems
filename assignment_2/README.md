@@ -18,7 +18,7 @@ The following has been tested using RHEL 8.1 and Python 3.6
 - In the virtual environment, type `flask run --port=5001` to start the microservice
 
 ### Troubleshooting:
-Pip3 might complain about missing libraries. If so, type the following into the virtual environments:
+Pip3 might complain about missing libraries. If so, try typing the following into the virtual environments:
 - pip3 install flask
 - pip3 install flask-jwt-extended
 
