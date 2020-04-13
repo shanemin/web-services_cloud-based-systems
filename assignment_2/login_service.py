@@ -2,31 +2,29 @@ from flask import Flask, request, jsonify
 from flask_jwt_extended import JWTManager, create_access_token
 
 app = Flask(__name__)
-app.config['JWT_TOKEN_LOCATION'] = ['json']
-app.config['JWT_SECRET_KEY'] = 'super-secret'
+app.config['JWT_SECRET_KEY'] = 'super-top-secret'
 jwt = JWTManager(app)
-logins = {'shane': 'secret'} # temporary
+
+logins = {'shane': 'secret', 'yuxue': 'secret2', 'mansi': 'secret3'}
 
 @app.route('/users/', methods=['POST'])
 def create_user():
     username = request.args.get('username')
     password = request.args.get('password')
-
-    if username == '' or password == '':
-        return 'Expected parameters are: username, password', 403
-    elif username in logins:
-        return 'Username already exists', 403
-
+    if not username:
+        return jsonify({'msg': 'Missing username parameter'}), 400
+    if not password:
+        return jsonify({'msg': 'Missing password parameter'}), 400
+    if username in logins:
+        return jsonify({'msg': 'Username already exists'}), 400
     logins[username] = password
-    return 'New user "' + username + '" created', 200
+    return jsonify({'msg': 'User created: {}'.format(username)}), 200
 
 @app.route('/users/login/', methods=['POST'])
 def login():
     username = request.args.get('username')
     password = request.args.get('password')
-
-    if username not in logins or logins.get(username) != password:
-        return 'Invalid credentials', 403
-
+    if logins.get(username) != password:
+        return jsonify({'msg': 'Invalid credentials'}), 403
     access_token = create_access_token(identity=username)
-    return 'Login success\nAccess token = ' + access_token, 200
+    return jsonify(access_token=access_token), 200
