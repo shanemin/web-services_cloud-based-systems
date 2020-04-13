@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/home/shane/Documents/web_services_cloud_systems/web-services_cloud-based-systems/assignment_1/1_2/venv"
+VIRTUAL_ENV="/home/shane/Documents/web_services_cloud_systems/web-services_cloud-based-systems/assignment_2/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
