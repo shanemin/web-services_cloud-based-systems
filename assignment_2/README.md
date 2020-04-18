@@ -27,4 +27,8 @@ The following has been tested using RHEL 8.1, Python 3.6, and Postman 7.21.2 for
     - In the virtual environment, type `flask run --port=5001` to start the microservice
 
 ## 2. Using the microservices:
+### Login service:
+- 
+
+### URL shortener service:
 - 
