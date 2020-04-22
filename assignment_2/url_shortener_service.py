@@ -1,4 +1,4 @@
-from flask import Flask, redirect, jsonify
+from flask import Flask, request, redirect, jsonify
 from flask_jwt_extended import JWTManager, jwt_required, get_jwt_identity
 from base_converter import base_converter as base
 from base64 import urlsafe_b64encode as b64encode
@@ -28,14 +28,15 @@ def single_action_get(value):
     full_url = str(b64decode(res[0][0])).strip("'b").strip("'")
     return 'The full URL from ' + shortened_url + ' is: ' + full_url, 301
 
-@app.route('/<string:value>', methods=['POST'])
+@app.route('/', methods=['POST'])
 @jwt_required
-def single_action_post(value):
-    url = str.encode(value)
+def single_action_post():
+    url = request.args.get('url')
+    url_encoded = str.encode(url)
     res = cursor.execute('INSERT INTO WEB_URL (URL) VALUES (?)', 
-        [b64encode(url)])
+        [b64encode(url_encoded)])
     encoded_string = base.toBase62(res.lastrowid)
-    return 'The shortened URL from ' + value + ' is: ' + host + encoded_string, 201
+    return 'The shortened URL from ' + url + ' is: ' + host + encoded_string, 201
 
 @app.route('/<string:value>', methods=['PUT'])
 @jwt_required
@@ -80,3 +81,6 @@ def bulk_action_get():
 def bulk_action_delete():
     res = cursor.execute('DELETE FROM WEB_URL',)
     return 'The database has been cleared', 204
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001)

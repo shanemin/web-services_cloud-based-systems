@@ -28,3 +28,6 @@ def login():
         return jsonify({'msg': 'Invalid credentials'}), 403
     access_token = create_access_token(identity=username)
     return jsonify(access_token=access_token), 200
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5000)
